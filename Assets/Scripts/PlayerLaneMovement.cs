@@ -1,32 +1,33 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerLaneMovement : MonoBehaviour
 {
-    public float laneDistance = 3.0f; 
+    public float laneDistance = 3.0f;
     public float moveSpeed = 10f;
+    public float forwardSpeed = 10f;
 
     private int currentLane = 0;
-    public float forwardSpeed = 10f;
+
     void Update()
     {
         transform.Translate(Vector3.forward * forwardSpeed * Time.deltaTime);
-        // 入力（PCなら）
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+
+        if (Keyboard.current.aKey.wasPressedThisFrame)
         {
-            if (currentLane > -1)
-                currentLane--;
+            currentLane--;
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Keyboard.current.dKey.wasPressedThisFrame)
         {
-            if (currentLane < 1)
-                currentLane++;
+            currentLane++;
         }
 
-        // 目標位置
-        Vector3 targetPosition = new Vector3(currentLane * laneDistance, transform.position.y, transform.position.z);
+        currentLane = Mathf.Clamp(currentLane, -1, 1);
 
-        // スムーズ移動
-        transform.position = Vector3.Lerp(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        float targetX = currentLane * laneDistance;
+        float newX = Mathf.Lerp(transform.position.x, targetX, moveSpeed * Time.deltaTime);
+
+        transform.position = new Vector3(newX, transform.position.y, transform.position.z);
     }
 }
