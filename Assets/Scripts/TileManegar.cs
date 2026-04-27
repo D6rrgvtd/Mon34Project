@@ -57,6 +57,7 @@ public class TileManager : MonoBehaviour
 
             GameObject obstacle = Instantiate(prefab, spawnPos, Quaternion.identity);
             obstacle.transform.parent = tile.transform;
+
         }
     }
     void SpawnTile()
